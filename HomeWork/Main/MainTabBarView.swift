@@ -9,12 +9,26 @@ import SwiftUI
 
 class TabData: ObservableObject{
     @Published var tabSelection: Int = 0
-    @Published var rowForView: Int = 0
+}
+
+class ListData: ObservableObject{
+    @Published var items: [Int] = []
+    @Published var currentItem: Int? = nil
+    
+    func fetchItems(){
+        if items.isEmpty{
+            for index in 0...10{
+                items.append(index)
+            }
+        }
+    }
 }
 
 struct MainTabBarView: View {
     
     @StateObject var tabData: TabData = .init()
+    
+    @StateObject var listData: ListData = .init()
     
     var body: some View {
         
@@ -22,14 +36,14 @@ struct MainTabBarView: View {
          
             TabHomeView()
                 .environmentObject(tabData)
+                .environmentObject(listData)
                 .tabItem{
                     Image(systemName: "house.fill")
                 }
-     
                 .tag(0)
             
             TabListView()
-                .environmentObject(tabData)
+                .environmentObject(listData)
                 .tabItem {
                     Image(systemName: "list.bullet")
                 }

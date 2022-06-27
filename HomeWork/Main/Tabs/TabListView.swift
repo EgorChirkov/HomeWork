@@ -9,33 +9,32 @@ import SwiftUI
 
 struct TabListView: View {
     
-    @EnvironmentObject var tabData: TabData
+    @EnvironmentObject var listData: ListData
     
     var body: some View {
         NavigationView {
             List{
-                if tabData.rowForView == 0{
-                    ForEach((0...10), id: \.self) { index in
-                        NavigationLink("Row \(index)") {
-                            Text("Current item \(index)")
-                        }
+                if let currentItem = listData.currentItem{
+                    NavigationLink("Item \(currentItem)", isActive: .constant(true)) {
+                        Text("Current item \(currentItem)")
+                            .onDisappear{
+                                withAnimation {
+                                    listData.currentItem = nil
+                                }
+                            }
                     }
                 }else{
-                    NavigationLink("Row \(tabData.rowForView)") {
-                        Text("Current item \(tabData.rowForView)")
+                    ForEach(listData.items, id: \.self) { item in
+                        NavigationLink("Item \(item)") {
+                            Text("Current item \(item)")
+                        }
                     }
                 }
-
+            }
+            .onAppear{
+                listData.fetchItems()
             }
             .navigationTitle("List View")
-            .navigationBarItems(trailing:
-                Button("Clear filter") {
-                    withAnimation {
-                        tabData.rowForView = 0
-                    }
-                }
-                .disabled(tabData.rowForView == 0)
-            )
         }
     }
 }

@@ -14,10 +14,15 @@ struct TabModalView: View {
     var body: some View {
         
         Button {
-            isShowView.toggle()
+            onShowView()
         } label: {
             Text("Show modal view")
+                .foregroundColor(.white)
+                .font(.subheadline)
         }
+        .padding()
+        .background(Color.gray)
+        .cornerRadius(15)
         .sheet(isPresented: $isShowView, onDismiss: nil) {
             SheetView()
         }
@@ -25,7 +30,7 @@ struct TabModalView: View {
     }
     
     private func onShowView(){
-        
+        isShowView.toggle()
     }
 }
 
@@ -44,8 +49,10 @@ private struct SheetView: View{
             LoadingView()
             
             Text("Close")
-                .padding(8)
-                .background(Color.gray.opacity(0.5))
+                .foregroundColor(.white)
+                .font(.subheadline)
+                .padding()
+                .background(Color.gray)
                 .cornerRadius(15)
                 .onTapGesture {
                     presentationMode.wrappedValue.dismiss()

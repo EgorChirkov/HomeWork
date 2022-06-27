@@ -11,24 +11,28 @@ struct TabHomeView: View {
     
     @EnvironmentObject var tabData: TabData
     
-    @State private var currentRow: Int = 0
+    @EnvironmentObject var listData: ListData
     
     var body: some View {
-        
         Button {
-            onAction()
+            onShowItem()
         } label: {
-            Text("Show Row \(currentRow) at ListView")
+            Text("Show Random Item on List View")
+                .foregroundColor(.white)
+                .font(.subheadline)
         }
-        .onAppear{
-            currentRow = Int.random(in: 1...10)
-        }
-
+        .padding()
+        .background(Color.gray)
+        .cornerRadius(15)
+        .disabled(listData.items.isEmpty)
+        .opacity(listData.items.isEmpty ? 0.5 : 1)
     }
     
-    private func onAction(){
-        tabData.rowForView = currentRow
-        tabData.tabSelection = 1
+    private func onShowItem(){
+        withAnimation {
+            listData.currentItem = listData.items.randomElement()
+            tabData.tabSelection = 1
+        }
     }
 }
 
